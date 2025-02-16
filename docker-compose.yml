@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  precios-mercado-central:
+    container_name: precios-mercado-central
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./public:/precios-mercado-central/public
+    ports:
+      - "3049:3049"
+    restart: unless-stopped
+    # Add healthcheck to ensure the application is running
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3049"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
