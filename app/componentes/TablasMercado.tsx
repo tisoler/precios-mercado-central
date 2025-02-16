@@ -31,7 +31,7 @@ export default function Home() {
           Precios de Frutas - {frutas.archivo}
         </div>
         <div className='flex justify-center'>
-          <table className={`${mostrarTablaFrutas ? 'block' : 'hidden'} bg-white text-black`}>
+          <table className={`${mostrarTablaFrutas ? 'block' : 'hidden'} bg-white text-black overflow-y-auto`}>
             <thead>
               <tr>
                 {Object.keys(frutas.data[0] as object).map(key => (
@@ -60,7 +60,7 @@ export default function Home() {
           Precios de Hortalizas - {hortalizas.archivo}
         </div>
         <div className='flex justify-center'>
-          <table className={`${mostrarTablaHortalizas ? 'block' : 'hidden'} bg-white text-black`}>
+          <table className={`${mostrarTablaHortalizas ? 'block' : 'hidden'} bg-white text-black overflow-y-auto`}>
             <thead>
               <tr>
                 {Object.keys(hortalizas.data[0] as object).map(key => (
