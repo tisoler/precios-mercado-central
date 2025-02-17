@@ -1,5 +1,4 @@
 import AdmZip, { IZipEntry } from 'adm-zip';
-import { NextRequest } from 'next/server';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import fs from 'fs';
@@ -14,11 +13,7 @@ export type Archivo = {
 
 const URL_MERCADO = 'https://mercadocentral.gob.ar/informaci%C3%B3n/precios-mayoristas';
 
-async function descargarUltimosPrecios(request: NextRequest) {
-  const host = request.headers.get('host');
-  const protocol = request.headers.get('x-forwarded-proto') || 'http'; // Para manejar HTTPS
-  const baseUrl = `${protocol}://${host}`;
-
+async function descargarUltimosPrecios() {
   // Obtener el contenido de la página
   const response = await axios.get(URL_MERCADO);
   const $ = cheerio.load(response.data);
@@ -45,12 +40,12 @@ async function descargarUltimosPrecios(request: NextRequest) {
   }
 
   // Descargar y procesar los archivos
-  await descargarYExtraerArchivo(lastFrutaFile, 'fruta', baseUrl);
-  await descargarYExtraerArchivo(lastHortalizaFile, 'hortaliza', baseUrl);
+  await descargarYExtraerArchivo(lastFrutaFile, 'fruta');
+  await descargarYExtraerArchivo(lastHortalizaFile, 'hortaliza');
 
 }
 
-async function descargarYExtraerArchivo(fileUrl: string, category: string, baseUrl: string) {
+async function descargarYExtraerArchivo(fileUrl: string, category: string) {
   const response = await axios.get(fileUrl, { responseType: 'arraybuffer' });
 
   // Guardar el archivo ZIP
@@ -81,6 +76,7 @@ async function descargarYExtraerArchivo(fileUrl: string, category: string, baseU
     let data = XLSX.utils.sheet_to_json(sheet); // Convertir a JSON
 
     // Verificar si ya existen los datos del archivo
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL || 'http://localhost:3000';
     const respPrecios = await axios.get(`${baseUrl}/api/precio`);
     const preciosExistentes = respPrecios?.data ? respPrecios.data as Precio[] : [];
 

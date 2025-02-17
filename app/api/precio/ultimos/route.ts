@@ -5,7 +5,7 @@ import descargarUltimosPrecios from '../../../lib/descarga';
 
 export async function GET(request: NextRequest) {
   try {
-    await descargarUltimosPrecios(request);
+    await descargarUltimosPrecios();
 
     await initPrecio();
     if (request.method === 'GET') {
