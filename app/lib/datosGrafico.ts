@@ -32,6 +32,8 @@ const procesarDatosGrafico = (data: Precio[]): DatosGrafico => {
       data: filteredData.map(item => item.ma),
       borderColor: `#${color}`, // Color aleatorio
       fill: false,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       hidden: true,
     });
 
@@ -40,6 +42,8 @@ const procesarDatosGrafico = (data: Precio[]): DatosGrafico => {
       data: filteredData.map(item => item.mapk),
       borderColor: `#${color}`, // Color aleatorio
       fill: false,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       hidden: true,
     });
   });

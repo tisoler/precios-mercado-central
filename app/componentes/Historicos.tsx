@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import { Precio } from '../modelos/precio';
 import procesarDatosGrafico, { DatosGrafico } from '../lib/datosGrafico';
+import { useRouter } from 'next/navigation';
 
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(
@@ -31,6 +32,7 @@ const Historicos = () => {
   const [datosHortalizas, setDatosHortalizas] = useState<DatosGrafico>();
   const [mostrarGraficoFrutas, setMostrarGraficoFrutas] = useState<boolean>(false);
   const [mostrarGraficoHortalizas, setMostrarGraficoHortalizas] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     // Obtener los datos del endpoint /api/precio
@@ -84,6 +86,12 @@ const Historicos = () => {
 
   return (
     <div className='flex flex-col items-center p-3'>
+      <div className='flex w-full justify-between items-center my-3 px-4'>
+        <div className='flex w-full justify-center'>
+          <h1 className='text-lg'>Histórico de precios</h1>
+        </div>
+        <button onClick={() => router.push('/')} className='bg-blue-700 hover:bg-white hover:text-blue-800 active:bg-blue-700 rounded-sm p-3'>Volver</button>
+      </div>
       <div className='flex flex-col border w-full'>
         <div
           className={`flex items-center px-2 py-1 relative cursor-pointer after:content-["❯"] after:absolute after:right-2 after:top-1/2 after:-translate-y-1/2 ${mostrarGraficoFrutas ? 'after:rotate-270' : 'after:rotate-90'}`}
