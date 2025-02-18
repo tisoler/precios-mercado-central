@@ -76,7 +76,7 @@ async function descargarYExtraerArchivo(fileUrl: string, category: string) {
     let data = XLSX.utils.sheet_to_json(sheet); // Convertir a JSON
 
     // Verificar si ya existen los datos del archivo
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL || 'http://localhost:3049';
     const respPrecios = await axios.get(`${baseUrl}/api/precio`);
     const preciosExistentes = respPrecios?.data ? respPrecios.data as Precio[] : [];
 
