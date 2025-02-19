@@ -125,7 +125,7 @@ async function descargarYExtraerArchivo(fileUrl: string, category: string) {
     fs.unlinkSync(zipPath);
 
     // Guardar precios
-    await axios.post('http://localhost:3000/api/precio', precios);
+    await axios.post(`${baseUrl}/api/precio`, precios);
 
   } catch (error) {
     // Eliminar archivos zip
