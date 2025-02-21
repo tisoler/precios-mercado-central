@@ -253,7 +253,7 @@ const Historicos = () => {
       </div>
       {/* div para hacer click afuera de la lista de búsqueda y cerrar las listas */}
       <div
-        className={`absolute w-screen h-screen top-0 left-0 bg-black z-40 opacity-50 ${terminoBusquedaFrutas.length >= 3 || terminoBusquedaHortalizas.length >= 3 ? 'block' : 'hidden'}`}
+        className={`fixed w-screen h-screen top-0 left-0 bg-black z-40 opacity-50 ${terminoBusquedaFrutas.length >= 3 || terminoBusquedaHortalizas.length >= 3 ? 'block' : 'hidden'}`}
         onClick={() => {
           setTerminoBusquedaFrutas('');
           setTerminoBusquedaHortalizas('');
