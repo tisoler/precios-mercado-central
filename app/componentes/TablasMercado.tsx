@@ -38,7 +38,7 @@ export default function Home() {
         <div className='flex w-full justify-center'>
           <h1 className='text-lg'>Precios del Mercado Central de Buenos Aires</h1>
         </div>
-        <button onClick={() => router.push('/historicos')} className='bg-blue-700 hover:bg-white hover:text-blue-800 active:bg-blue-700 rounded-sm p-3'>Históricos</button>
+        <button onClick={() => router.push('/historicos')} className='bg-green-700 hover:bg-white hover:text-green-800 active:bg-green-700 rounded-sm p-3'>Históricos</button>
       </div>
       <div className='flex flex-col w-full border p-2 w-2xl'>
         <div

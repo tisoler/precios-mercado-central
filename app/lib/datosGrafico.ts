@@ -1,10 +1,11 @@
 import { Precio } from "../modelos/precio";
 
-interface Dataset {
+export interface Dataset {
   label: string;
   data: number[];
   borderColor: string;
   fill: boolean;
+  borderDash?: number[];
 }
 
 export type DatosGrafico = {
@@ -32,19 +33,14 @@ const procesarDatosGrafico = (data: Precio[]): DatosGrafico => {
       data: filteredData.map(item => item.ma),
       borderColor: `#${color}`, // Color aleatorio
       fill: false,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      hidden: true,
     });
 
     datasets.push({
       label: `${espValue}-${varValue}-${calValue}-${tamValue}-${procValue}(MAPK)`,
       data: filteredData.map(item => item.mapk),
       borderColor: `#${color}`, // Color aleatorio
+      borderDash: [5, 5], // Creates a dotted/dashed line
       fill: false,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      hidden: true,
     });
   });
 
