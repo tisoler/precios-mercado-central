@@ -1,23 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { initPrecio, Precio } from '../../../modelos/precio';
-import { Op } from 'sequelize';
-import descargarUltimosPrecios from '../../../lib/descarga';
+import obtenerUltimosPrecios from '../../../lib/descarga';
 
 export async function GET(request: NextRequest) {
   try {
-    await descargarUltimosPrecios();
-
-    await initPrecio();
     if (request.method === 'GET') {
-      const precios = await Precio.findAll({
-        where: {
-          fecha: {
-            [Op.eq]: await Precio.max('fecha') as string,
-          }
-        }
-    }) || [];
-
-      return NextResponse.json(precios);
+      const ultimosPrecios = await obtenerUltimosPrecios();
+      return NextResponse.json(ultimosPrecios);
     } else {
       return NextResponse.json({ message: 'Método no permitido' }, { status: 405 });
     }

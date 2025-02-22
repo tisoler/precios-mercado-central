@@ -52,13 +52,13 @@ export default function Home() {
             <thead>
               <tr>
                 <th className='border border-gray-700'>ESP</th>
+                <th className='border border-gray-700'>VAR</th>
                 <th className='border border-gray-700'>MA</th>
                 <th className='border border-gray-700'>MAPK</th>
                 <th className='border border-gray-700'>ENV</th>
                 <th className='border border-gray-700'>KG</th>
                 <th className='border border-gray-700'>CAL</th>
                 <th className='border border-gray-700'>PROC</th>
-                <th className='border border-gray-700'>VAR</th>
                 <th className='border border-gray-700'>TAM</th>
               </tr>
             </thead>
@@ -66,13 +66,13 @@ export default function Home() {
               {frutas.map((precio, index) => (
                 <tr key={index}>
                   <td className='border border-gray-700' key={`F-${precio.id}-ESP`}>{precio.esp}</td>
+                  <td className='border border-gray-700' key={`F-${precio.id}-VAR`}>{precio.var}</td>
                   <td className='border border-gray-700' key={`F-${precio.id}-MA`}>{precio.ma}</td>
                   <td className='border border-gray-700' key={`F-${precio.id}-MAPK`}>{precio.mapk}</td>
                   <td className='border border-gray-700' key={`F-${precio.id}-ENV`}>{precio.env}</td>
                   <td className='border border-gray-700' key={`F-${precio.id}-KG`}>{precio.kg}</td>
                   <td className='border border-gray-700' key={`F-${precio.id}-CAL`}>{precio.cal}</td>
                   <td className='border border-gray-700' key={`F-${precio.id}-PROC`}>{precio.proc}</td>
-                  <td className='border border-gray-700' key={`F-${precio.id}-VAR`}>{precio.var}</td>
                   <td className='border border-gray-700' key={`F-${precio.id}-TAM`}>{precio.tam}</td>
                 </tr>
               ))}
@@ -92,13 +92,13 @@ export default function Home() {
             <thead>
               <tr>
                 <th className='border border-gray-700'>ESP</th>
+                <th className='border border-gray-700'>VAR</th>
                 <th className='border border-gray-700'>MA</th>
                 <th className='border border-gray-700'>MAPK</th>
                 <th className='border border-gray-700'>ENV</th>
                 <th className='border border-gray-700'>KG</th>
                 <th className='border border-gray-700'>CAL</th>
                 <th className='border border-gray-700'>PROC</th>
-                <th className='border border-gray-700'>VAR</th>
                 <th className='border border-gray-700'>TAM</th>
               </tr>
             </thead>
@@ -106,13 +106,13 @@ export default function Home() {
               {hortalizas?.map((precio, index) => (
                 <tr key={index}>
                   <td className='border border-gray-700' key={`H-${precio.id}-ESP`}>{precio.esp}</td>
+                  <td className='border border-gray-700' key={`H-${precio.id}-VAR`}>{precio.var}</td>
                   <td className='border border-gray-700' key={`H-${precio.id}-MA`}>{precio.ma}</td>
                   <td className='border border-gray-700' key={`H-${precio.id}-MAPK`}>{precio.mapk}</td>
                   <td className='border border-gray-700' key={`H-${precio.id}-ENV`}>{precio.env}</td>
                   <td className='border border-gray-700' key={`H-${precio.id}-KG`}>{precio.kg}</td>
                   <td className='border border-gray-700' key={`H-${precio.id}-CAL`}>{precio.cal}</td>
                   <td className='border border-gray-700' key={`H-${precio.id}-PROC`}>{precio.proc}</td>
-                  <td className='border border-gray-700' key={`H-${precio.id}-VAR`}>{precio.var}</td>
                   <td className='border border-gray-700' key={`H-${precio.id}-TAM`}>{precio.tam}</td>
                 </tr>
               ))}

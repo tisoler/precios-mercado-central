@@ -30,8 +30,12 @@ ChartJS.register(
 const Historicos = () => {
   const [mostrarGraficoFrutas, setMostrarGraficoFrutas] = useState<boolean>(false);
   const [mostrarGraficoHortalizas, setMostrarGraficoHortalizas] = useState<boolean>(false);
-  const [terminoBusquedaFrutas, setTerminoBusquedaFrutas] = useState('');
-  const [terminoBusquedaHortalizas, setTerminoBusquedaHortalizas] = useState('');
+  const [terminoBusquedaFrutas, setTerminoBusquedaFrutas] = useState<string>('');
+  const [fechaDesdeFrutas, setFechaDesdeFrutas] = useState<string>('20250101');
+  const [fechaHastaFrutas, setFechaHastaFrutas] = useState<string>('');
+  const [terminoBusquedaHortalizas, setTerminoBusquedaHortalizas] = useState<string>('');
+  const [fechaDesdeHortalizas, setFechaDesdeHortalizas] = useState<string>('20250101');
+  const [fechaHastaHortalizas, setFechaHastaHortalizas] = useState<string>('');
   const frutas = useRef<DatosGrafico>(null);
   const [frutasVisibles, setFrutasVisibles] = useState<boolean[]>([]);
   const [frutasGrafico, setFrutasGrafico] = useState<DatosGrafico>();
@@ -60,7 +64,12 @@ const Historicos = () => {
     responsive: true,
     plugins: {
       legend: {
-        display: false,
+        display: true,
+        labels: {
+          font: {
+            size: 12
+          }
+        }
       },
       title: {
         display: false,
@@ -114,14 +123,14 @@ const Historicos = () => {
 
   useEffect(() => {
     setFrutasGrafico({
-      labels: frutas.current?.labels || [],
+      labels: frutas.current?.labels?.filter(f => (fechaDesdeFrutas ? f >= fechaDesdeFrutas : true) && (fechaHastaFrutas ? f <= fechaHastaFrutas : true)) || [],
       datasets: frutas.current?.datasets.filter((_, index) => frutasVisibles[index]) || [],
     });
     setHortalizasGrafico({
-      labels: hortalizas.current?.labels || [],
+      labels: hortalizas.current?.labels?.filter(f => (fechaDesdeHortalizas ? f >= fechaDesdeHortalizas : true) && (fechaHastaHortalizas ? f <= fechaHastaHortalizas : true)) || [],
       datasets: hortalizas.current?.datasets.filter((_, index) => hortalizasVisibles[index]) || [],
     });
-  }, [frutasVisibles, hortalizasVisibles]);
+  }, [frutasVisibles, hortalizasVisibles, fechaDesdeFrutas, fechaHastaFrutas, fechaDesdeHortalizas, fechaHastaHortalizas]);
 
   if (!frutasGrafico || !hortalizasGrafico) {
     return <p>Cargando...</p>;
@@ -160,6 +169,40 @@ const Historicos = () => {
               >
                 Deseleccionar todos
               </button>
+              <div className="flex gap-2 items-center ml-4">
+                <span>Desde</span>
+                <input
+                  type="date"
+                  className="text-black p-2"
+                  onChange={(e) => {
+                    const fechaSeleccionada = e.target.value.replaceAll('-', '');
+                    const fechas = frutas.current?.labels?.filter(
+                      date => (fechaSeleccionada ? date >= fechaSeleccionada : true) && (fechaHastaFrutas ? date <= fechaHastaFrutas : true)
+                    ) || [];
+                    setFrutasGrafico({
+                      ...frutasGrafico,
+                      labels: fechas,
+                    });
+                    setFechaDesdeFrutas(fechaSeleccionada);
+                  }}
+                />
+                <span>hasta</span>
+                <input
+                  type="date"
+                  className="text-black p-2"
+                  onChange={(e) => {
+                    const fechaSeleccionada = e.target.value.replaceAll('-', '');
+                    const fechas = frutas.current?.labels?.filter(
+                      date => (fechaSeleccionada ? date <= fechaSeleccionada : true) && (fechaDesdeFrutas ? date >= fechaDesdeFrutas : true)
+                    ) || [];
+                    setFrutasGrafico({
+                      ...frutasGrafico,
+                      labels: fechas,
+                    });
+                    setFechaHastaFrutas(fechaSeleccionada);
+                  }}
+                />
+              </div>
             </div>
             {terminoBusquedaFrutas.length >= 3 && (
               <ul className='absolute overflow-y-auto top-10 bg-white text-black w-fit p-2 border border-gray-800 max-h-80' style={{ listStyle: 'none' }}>
@@ -217,6 +260,26 @@ const Historicos = () => {
               >
                 Deseleccionar todos
               </button>
+              <div className="flex gap-2 items-center ml-4">
+                <span>Desde</span>
+                <input
+                  type="date"
+                  className="text-black p-2"
+                  onChange={(e) => {
+                    const fechaSeleccionada = e.target.value.replaceAll('-', '');
+                    setFechaDesdeHortalizas(fechaSeleccionada);
+                  }}
+                />
+                <span>hasta</span>
+                <input
+                  type="date"
+                  className="text-black p-2"
+                  onChange={(e) => {
+                    const fechaSeleccionada = e.target.value.replaceAll('-', '');
+                    setFechaHastaHortalizas(fechaSeleccionada);
+                  }}
+                />
+              </div>
             </div>
             {terminoBusquedaHortalizas.length >= 3 && (
               <ul className='absolute overflow-y-auto top-10 bg-white text-black w-fit p-2 border border-gray-800 max-h-80' style={{ listStyle: 'none' }}>

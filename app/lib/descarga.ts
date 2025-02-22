@@ -4,7 +4,8 @@ import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
 import * as XLSX from 'xlsx';
-import { Precio } from '../modelos/precio';
+import { initPrecio, Precio } from '../modelos/precio';
+import { Op } from 'sequelize';
 
 export type Archivo = {
   archivo: string;
@@ -13,7 +14,7 @@ export type Archivo = {
 
 const URL_MERCADO = 'https://mercadocentral.gob.ar/informaci%C3%B3n/precios-mayoristas';
 
-async function descargarUltimosPrecios() {
+const obtenerUltimosPrecios = async (): Promise<Precio[]> => {
   // Obtener el contenido de la página
   const response = await axios.get(URL_MERCADO);
   const $ = cheerio.load(response.data);
@@ -40,12 +41,13 @@ async function descargarUltimosPrecios() {
   }
 
   // Descargar y procesar los archivos
-  await descargarYExtraerArchivo(lastFrutaFile, 'fruta');
-  await descargarYExtraerArchivo(lastHortalizaFile, 'hortaliza');
+  const ultimosPreciosFrutas = await descargarYExtraerArchivo(lastFrutaFile, 'fruta');
+  const ultimosPreciosHortalizas = await descargarYExtraerArchivo(lastHortalizaFile, 'hortaliza');
 
+  return [...ultimosPreciosFrutas, ...ultimosPreciosHortalizas];
 }
 
-async function descargarYExtraerArchivo(fileUrl: string, category: string) {
+async function descargarYExtraerArchivo(fileUrl: string, category: string): Promise<Precio[]> {
   const response = await axios.get(fileUrl, { responseType: 'arraybuffer' });
 
   // Guardar el archivo ZIP
@@ -69,23 +71,33 @@ async function descargarYExtraerArchivo(fileUrl: string, category: string) {
       throw new Error(`No se encontró un archivo XLS en el ZIP de ${category}`);
     }
 
+    // Verificar si ya existen los datos del archivo
+    await initPrecio(); // Usado tambien para el bulkCreate luego
+    const utlimosPrecios = await Precio.findAll({
+      where: {
+        archivo: latestXlsEntry.entryName,
+        fecha: {
+          [Op.eq]: await Precio.findOne({
+            attributes: ['fecha'],
+            order: [['fecha', 'DESC']]
+          }).then(result => result?.fecha)
+        }
+      },
+      raw: true
+    }) || [];
+
+    // Si ya están cargados para esa fecha no guardo nada
+    if (utlimosPrecios?.some(p => p.archivo === latestXlsEntry.entryName)) {
+      // Eliminar archivos zip
+      fs.unlinkSync(zipPath);
+      return utlimosPrecios;
+    }
+
     // Leer el archivo XLS
     const workbook = XLSX.read(latestXlsEntry.getData(), { type: 'buffer' });
     const sheetName = workbook.SheetNames[0]; // Obtener la primera hoja
     const sheet = workbook.Sheets[sheetName];
     let data = XLSX.utils.sheet_to_json(sheet); // Convertir a JSON
-
-    // Verificar si ya existen los datos del archivo
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL || 'http://localhost:3049';
-    const respPrecios = await axios.get(`${baseUrl}/api/precio`);
-    const preciosExistentes = respPrecios?.data ? respPrecios.data as Precio[] : [];
-
-    // Si ya están cargados para esa fecha no guardo nada
-    if (preciosExistentes?.some(p => p.archivo === latestXlsEntry.entryName)) {
-      // Eliminar archivos zip
-      fs.unlinkSync(zipPath);
-      return;
-    }
 
     // Filtrar columnas, mantener solamente ESP, MA, MAPK, ENV, KG, CAL, PROC, VAR
     const columnaMA = 'MA' + latestXlsEntry.entryName.replace('RF', '').replace('RH', '').replace('.XLS', '');
@@ -117,7 +129,7 @@ async function descargarYExtraerArchivo(fileUrl: string, category: string) {
           var: item['VAR'],
           archivo: latestXlsEntry.entryName,
           fecha: new Date().toISOString().slice(0, 10).replace(/-/g, ''),
-        } as unknown as Precio;
+        } as Precio;
       });
     }
 
@@ -125,14 +137,18 @@ async function descargarYExtraerArchivo(fileUrl: string, category: string) {
     fs.unlinkSync(zipPath);
 
     // Guardar precios
-    await axios.post(`${baseUrl}/api/precio`, precios);
+    await Precio.bulkCreate(precios);
+    return precios;
 
   } catch (error) {
     // Eliminar archivos zip
     console.log('Error: ' + error)
-    try { fs.unlinkSync(zipPath); } catch {}
+    try {
+      fs.unlinkSync(zipPath);
+      return [];
+    } catch {}
     throw error;
   }
 }
 
-export default descargarUltimosPrecios;
+export default obtenerUltimosPrecios;
