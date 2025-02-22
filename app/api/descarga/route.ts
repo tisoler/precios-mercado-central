@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
-// import obtenerUltimosPrecios from '../../lib/descarga';
-import descargarLote from '@/app/lib/descargaLote';
+import obtenerUltimosPrecios from '../../lib/descarga';
 
 export async function GET() {
 
   try { 
-    await descargarLote();
+    await obtenerUltimosPrecios();
     return NextResponse.json({ message: 'Descarga exitosa' });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);

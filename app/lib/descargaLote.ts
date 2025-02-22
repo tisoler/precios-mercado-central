@@ -1,10 +1,10 @@
-import AdmZip from 'adm-zip';
+// import AdmZip from 'adm-zip';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import fs from 'fs';
-import path from 'path';
-import * as XLSX from 'xlsx';
-import { initPrecio, Precio } from '../modelos/precio';
+// import fs from 'fs';
+// import path from 'path';
+// import * as XLSX from 'xlsx';
+// import { initPrecio, Precio } from '../modelos/precio';
 
 export type Archivo = {
   archivo: string;
@@ -43,7 +43,7 @@ const descargarLote = async () => {
   //await descargarYExtraerArchivoLote(lastFrutaFile);
   //await descargarYExtraerArchivoLote(lastHortalizaFile);
 }
-
+/*
 async function descargarYExtraerArchivoLote(fileUrl: string) {
   const response = await axios.get(fileUrl, { responseType: 'arraybuffer' });
 
@@ -115,5 +115,5 @@ async function descargarYExtraerArchivoLote(fileUrl: string) {
     throw error;
   }
 }
-
+*/
 export default descargarLote;
