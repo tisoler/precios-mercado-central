@@ -38,10 +38,10 @@ const Historicos = () => {
   const [fechaHastaHortalizas, setFechaHastaHortalizas] = useState<string>('');
   const frutas = useRef<DatosGrafico>(null);
   const [frutasVisibles, setFrutasVisibles] = useState<boolean[]>([]);
-  const [frutasGrafico, setFrutasGrafico] = useState<DatosGrafico>();
+  const [frutasGrafico, setFrutasGrafico] = useState<DatosGrafico>({ labels: [], datasets: [] });
   const hortalizas = useRef<DatosGrafico>(null);
   const [hortalizasVisibles, setHortalizasVisibles] = useState<boolean[]>([]);
-  const [hortalizasGrafico, setHortalizasGrafico] = useState<DatosGrafico>();
+  const [hortalizasGrafico, setHortalizasGrafico] = useState<DatosGrafico>({ labels: [], datasets: [] });
   const router = useRouter();
 
   useEffect(() => {
@@ -132,8 +132,8 @@ const Historicos = () => {
     });
   }, [frutasVisibles, hortalizasVisibles, fechaDesdeFrutas, fechaHastaFrutas, fechaDesdeHortalizas, fechaHastaHortalizas]);
 
-  if (!frutasGrafico || !hortalizasGrafico) {
-    return <p>Cargando...</p>;
+  if (!hortalizasVisibles.length || !frutasVisibles.length) {
+    return <p>Cargando datos históricos...</p>;
   }
 
   return (
