@@ -45,7 +45,7 @@ export default function Home() {
           className={`flex items-center px-2 py-1 relative cursor-pointer after:content-["❯"] after:absolute after:right-2 after:top-1/2 after:-translate-y-1/2 ${mostrarTablaFrutas ? 'after:rotate-270' : 'after:rotate-90'}`}
           onClick={() => setMostrarTablaFrutas(!mostrarTablaFrutas)}
         >
-          Precios de Frutas - {frutas[0].archivo}
+          Precios de Frutas - {frutas.length && frutas[0].archivo}
         </div>
         <div className='flex justify-center'>
           <table className={`${mostrarTablaFrutas ? 'block' : 'hidden'} bg-white text-black overflow-y-auto`}>
@@ -85,7 +85,7 @@ export default function Home() {
           className={`flex items-center px-2 py-1 relative cursor-pointer after:content-["❯"] after:absolute after:right-2 after:top-1/2 after:-translate-y-1/2 ${mostrarTablaHortalizas ? 'after:rotate-270' : 'after:rotate-90'}`}
           onClick={() => setMostrarTablaHortalizas(!mostrarTablaHortalizas)}
         >
-          Precios de Hortalizas - {hortalizas[0].archivo}
+          Precios de Hortalizas - {hortalizas.length && hortalizas[0].archivo}
         </div>
         <div className='flex justify-center'>
           <table className={`${mostrarTablaHortalizas ? 'block' : 'hidden'} bg-white text-black overflow-y-auto`}>

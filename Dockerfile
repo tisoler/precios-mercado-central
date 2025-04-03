@@ -1,5 +1,5 @@
 # Stage 1: Building the code
-FROM node:18-alpine AS builder
+FROM node:23-alpine AS builder
 
 WORKDIR /precios-mercado-central
 
@@ -14,7 +14,7 @@ COPY . .
 RUN yarn build
 
 # Stage 2: Run the built code
-FROM node:18-alpine AS runner
+FROM node:23-alpine AS runner
 WORKDIR /precios-mercado-central
 
 # Set to production
