@@ -15,6 +15,36 @@ export type Archivo = {
 const URL_MERCADO = 'https://mercadocentral.gob.ar/informaci%C3%B3n/precios-mayoristas';
 
 const obtenerUltimosPrecios = async (): Promise<Precio[]> => {
+  // Obtener últimos precios de la base
+  // Si los últimos precios son del día hábil anterior, no descarga nada y devuelve los últimos
+  // Día hábil anterior: luenes a viernes
+  await initPrecio();
+  const ultimosPrecioCargado = await Precio.findOne({
+    attributes: ['fecha'],
+    order: [['fecha', 'DESC']]
+  }) || null;
+
+  if (ultimosPrecioCargado) {
+    // Obtener último día hábil anterior a hoy
+    const hoy = new Date();
+    const fechaHoy = hoy.toISOString().slice(0, 10).replace(/-/g, '');
+    const ayer = new Date();
+    ayer.setDate(hoy.getDate() - 1);
+    const fechaAyer = ayer.toISOString().slice(0, 10).replace(/-/g, '');
+    // Si es domingo o lunes no descarga nada y devuelve los últimos precios
+    // O si el día anterior fue hábil y los últimos precios son de esa fecha o de hoy, devolverlos y no descargar nada
+    if ((hoy.getDay() === 0 && hoy.getDay() === 1) || ultimosPrecioCargado.fecha === fechaAyer || ultimosPrecioCargado.fecha === fechaHoy) {
+      return await Precio.findAll({
+        where: {
+          fecha: {
+            [Op.eq]: ultimosPrecioCargado.fecha
+          }
+        }
+      }) || [];
+    }
+  }
+
+  // DESCARGA PRECIOS DE LA PÁGINA DEL MERCADO
   // Obtener el contenido de la página
   const response = await axios.get(URL_MERCADO);
   const $ = cheerio.load(response.data);
